@@ -25,7 +25,7 @@ def moving_average(DF, WINDOW_SIZE):
     pandas.DataFrame
         The data frame with the moving averages.
     """
-#Function code here 
+    #Function code here 
  ```
 
 # `remove_trend This` 
