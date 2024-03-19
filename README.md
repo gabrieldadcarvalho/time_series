@@ -24,6 +24,7 @@ def moving_average(DF, WINDOW_SIZE):
     -------
     pandas.DataFrame
         The data frame with the moving averages.
+    """
 #Function code here 
  ```
 
@@ -44,6 +45,7 @@ def remove_trend(DF, VALUES, TIME):
     -------
     pandas.DataFrame
         The data frame with the linear trend removed.
+    """
     #Function code here 
 ```
 
