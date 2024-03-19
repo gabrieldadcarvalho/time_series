@@ -24,13 +24,13 @@ def moving_average(DF, WINDOW_SIZE):
     -------
     pandas.DataFrame
         The data frame with the moving averages.
-    """
-    # Function code here
-remove_trend
-This function removes the linear trend from a time series data frame.
+#Function code here 
+ ```
 
-python
-Copy code
+# remove_trend This: 
+function removes the linear trend from a time series data frame.
+
+```python
 def remove_trend(DF, VALUES, TIME):
     """
     This function removes the linear trend from a time series data frame.
@@ -44,13 +44,13 @@ def remove_trend(DF, VALUES, TIME):
     -------
     pandas.DataFrame
         The data frame with the linear trend removed.
-    """
-    # Function code here
-remove_sazonality
-This function removes the seasonal component from a time series data frame.
+    #Function code here 
+```
 
-python
-Copy code
+
+# Function code here remove_sazonality This function removes the seasonal component from a time series data frame.
+
+```python
 def remove_sazonality(DF, SEASONAL_PERIOD, VALUES, TIME):
     """
     This function removes the seasonal component from a time series data frame.
@@ -67,12 +67,12 @@ def remove_sazonality(DF, SEASONAL_PERIOD, VALUES, TIME):
     pandas.DataFrame
         The data frame with the seasonal component removed.
     """
-    # Function code here
-remove_sazonality_and_trend
+    #Function code here 
+```
+# remove_sazonality_and_trend: 
 This function removes the seasonal and linear trend components from a time series data frame.
 
-python
-Copy code
+```python
 def remove_sazonality_and_trend(DF, SEASONAL_PERIOD, VALUES, TIME):
     """
     This function removes the seasonal and linear trend components from a time series data frame.
@@ -93,12 +93,14 @@ def remove_sazonality_and_trend(DF, SEASONAL_PERIOD, VALUES, TIME):
     pandas.DataFrame
         The data frame with the seasonal and linear trend components removed.
     """
-    # Function code here
-autocorrelation
+    #Function code here 
+```
+    
+
+# autocorrelation:
 This function calculates the autocorrelation function (ACF) of a time series data frame.
 
-python
-Copy code
+```python
 def autocorrelation(DF, H, save_path):
     """
     This function calculates the autocorrelation function (ACF) of a time series data frame.
@@ -117,7 +119,8 @@ def autocorrelation(DF, H, save_path):
     numpy.ndarray
         The ACF values.
     """
-    # Function code here
+    #Function code here 
+```
 
 ## Requirements
 * Python 3.x
