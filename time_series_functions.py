@@ -1,12 +1,17 @@
-def moving_average(DF, WINDOW_SIZE):
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def moving_average(df, window_size):
     """
     This function calculates the moving average of a time series data frame.
 
     Parameters
     ----------
-    DF : pandas.DataFrame
+    df : pandas.DataFrame
         The input data frame containing the time series data.
-    WINDOW_SIZE : int
+    window_size : int
         The size of the moving average window.
 
     Returns
@@ -15,20 +20,23 @@ def moving_average(DF, WINDOW_SIZE):
         The data frame with the moving averages.
 
     """
-    import plotly.express as px
-    AVERAGES = []
-    N = len(DF)
+    averages = df.rolling(window=window_size).mean()
 
-    # Calculando a média móvel
-    for i in range(0, N - WINDOW_SIZE + 1):
-        AVERAGES.append(DF['Vendas'][i:i + WINDOW_SIZE].mean())
-
-    # Plotando o gráfico da média móvel
-    GRAPH1 = px.line(x=DF['Mes'][WINDOW_SIZE - 1:], y=AVERAGES)
-    GRAPH1.update_layout(
-        title=f"Médias Móveis", xaxis_title="Mês"
+    # Plotting the moving average
+    plt.figure(figsize=(10, 6))
+    plt.plot(df.index, df.iloc[:, 0], label="Original Data")
+    plt.plot(
+        averages.index,
+        averages.iloc[:, 0],
+        label=f"Moving Average (Window Size: {window_size})",
     )
-    GRAPH1.write_image(f"medias_moveis_h_{WINDOW_SIZE}.png")
+    plt.title(f"Moving Averages (Window Size: {window_size})")
+    plt.xlabel("Date")
+    plt.ylabel("Value")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"moving_averages_{window_size}.png")
+    plt.show()
 
 
 def remove_trend(DF, VALUES, TIME):
@@ -47,13 +55,14 @@ def remove_trend(DF, VALUES, TIME):
 
     """
     import plotly.express as px
+
     DATA_FRAME_SEM_TENDENCIA = DF[VALUES].diff().dropna()
     DATA_FRAME_SEM_TENDENCIA.index = DF.iloc[1:].index
     GRAFICO_SEM_TENDENCIA = px.line(x=DF[TIME][1:], y=DATA_FRAME_SEM_TENDENCIA)
     GRAFICO_SEM_TENDENCIA.update_layout(
         title=f"Gráfico de Vendas Sem Tendência - D(Yt) = Yt - Yt-1", xaxis_title=TIME
     )
-    GRAFICO_SEM_TENDENCIA.write_image('grafico_sem_tendencia.png')
+    GRAFICO_SEM_TENDENCIA.write_image("grafico_sem_tendencia.png")
     return DATA_FRAME_SEM_TENDENCIA
 
 
@@ -75,12 +84,15 @@ def remove_sazonality(DF, SEASONAL_PERIOD, VALUES, TIME):
 
     """
     import plotly.express as px
+
     DATA_FRAME_SEM_SAZONALIDADE = DF[VALUES].diff(SEASONAL_PERIOD).dropna()
-    GRAFICO_SEM_TENDENCIA = px.line(x=DATA_FRAME[TIME][SEASONAL_PERIOD:], y=DATA_FRAME_SEM_SAZONALIDADE)
+    GRAFICO_SEM_TENDENCIA = px.line(
+        x=DATA_FRAME[TIME][SEASONAL_PERIOD:], y=DATA_FRAME_SEM_SAZONALIDADE
+    )
     GRAFICO_SEM_TENDENCIA.update_layout(
         title=f"Gráfico de Vendas Sem Sazonalidade", xaxis_title=TIME
     )
-    GRAFICO_SEM_TENDENCIA.write_image('grafico_sem_sazonalidade.png')
+    GRAFICO_SEM_TENDENCIA.write_image("grafico_sem_sazonalidade.png")
     return DATA_FRAME_SEM_SAZONALIDADE
 
 
@@ -106,13 +118,20 @@ def remove_sazonality_and_trend(DF, SEASONAL_PERIOD, VALUES, TIME):
 
     """
     import plotly.express as px
-    DATA_FRAME_SEM_SAZONALIDADE_TENDENCIA = DF[VALUES].diff(SEASONAL_PERIOD).diff().dropna()
-    GRAFICO_SEM_SAZONALIDADE_TENDENCIA = px.line(x=DATA_FRAME[TIME][SEASONAL_PERIOD + 1:],
-                                                 y=DATA_FRAME_SEM_SAZONALIDADE_TENDENCIA)
+
+    DATA_FRAME_SEM_SAZONALIDADE_TENDENCIA = (
+        DF[VALUES].diff(SEASONAL_PERIOD).diff().dropna()
+    )
+    GRAFICO_SEM_SAZONALIDADE_TENDENCIA = px.line(
+        x=DATA_FRAME[TIME][SEASONAL_PERIOD + 1 :],
+        y=DATA_FRAME_SEM_SAZONALIDADE_TENDENCIA,
+    )
     GRAFICO_SEM_SAZONALIDADE_TENDENCIA.update_layout(
         title=f"Gráfico de Vendas Sem Sazonalidade e Tendência", xaxis_title=TIME
     )
-    GRAFICO_SEM_SAZONALIDADE_TENDENCIA.write_image('grafico_sem_sazonalidade_e_tendencia.png')
+    GRAFICO_SEM_SAZONALIDADE_TENDENCIA.write_image(
+        "grafico_sem_sazonalidade_e_tendencia.png"
+    )
     return DATA_FRAME_SEM_SAZONALIDADE_TENDENCIA
 
 
@@ -152,9 +171,12 @@ def autocorrelation(DF, H, save_path):
     ACF = ACF[1:]
 
     # Criando o gráfico de autocorrelação com Plotly Express
-    fig = px.bar(x=lags[1:], y=ACF, labels={'x': 'Lag', 'y': 'Autocorrelation'})
-    fig.update_layout(title='Função de Autocorrelação (ACF)', xaxis=dict(showgrid=True),
-                      yaxis=dict(showgrid=True))
+    fig = px.bar(x=lags[1:], y=ACF, labels={"x": "Lag", "y": "Autocorrelation"})
+    fig.update_layout(
+        title="Função de Autocorrelação (ACF)",
+        xaxis=dict(showgrid=True),
+        yaxis=dict(showgrid=True),
+    )
 
     # Salvando o gráfico em um arquivo .png
     fig.write_image(save_path)
@@ -187,24 +209,26 @@ def graph_color(DF, VALUE, TIME):
     DF[TIME] = pd.to_datetime(DF[TIME])
 
     # Extraindo o ano da coluna de tempo
-    DF['Ano'] = DF[TIME].dt.year
+    DF["Ano"] = DF[TIME].dt.year
 
     # Agrupando os dados pelo ano
-    GRUPO_ANO = DF.groupby('Ano')
+    GRUPO_ANO = DF.groupby("Ano")
 
     # Criando um objeto de figura para o gráfico
     GRAFICO_COR_POR_ANO = go.Figure()
 
     # Iterando sobre cada ano e adicionando uma linha ao gráfico
     for year, group in GRUPO_ANO:
-        GRAFICO_COR_POR_ANO.add_trace(go.Scatter(x=group[TIME], y=group[VALUE], mode='lines', name=f'Ano {year}'))
+        GRAFICO_COR_POR_ANO.add_trace(
+            go.Scatter(x=group[TIME], y=group[VALUE], mode="lines", name=f"Ano {year}")
+        )
 
     # Atualizando o layout do gráfico
     GRAFICO_COR_POR_ANO.update_layout(
-        title='Evolução de Vendas por Ano',
-        xaxis_title='Mês',
-        yaxis_title='Vendas',
-        showlegend=True
+        title="Evolução de Vendas por Ano",
+        xaxis_title="Mês",
+        yaxis_title="Vendas",
+        showlegend=True,
     )
 
     # Salvando o gráfico como uma imagem
